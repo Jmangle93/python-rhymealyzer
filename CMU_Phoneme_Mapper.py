@@ -6,12 +6,12 @@ import re
 
 class CMUPhonemeMapper:
 
-    def __init__(self, txt_filename=None, comment_indicator='//', section_header_regex='\[*\]'):
+    def __init__(self, txt_filename=None, comment_indicator='//', section_header_regex='[\[.*\]]'):
         self.g2p = G2p()
-        self.cmudict = cmudict.dict()
         self.comment_indicator = comment_indicator
         self.section_header_regex = re.compile(section_header_regex)
         self.header_tag = '<HEADER>'
+        self.split_regex = ' |-'
 
         self.txt_file = self.open_txt_file(txt_filename)
         self.delimited_lines = self.txt_to_delimited(self.txt_file)
@@ -30,9 +30,8 @@ class CMUPhonemeMapper:
         except IOError:
             print('There was a problem opening the file.')
 
-    @staticmethod
-    def split_line(line):
-        return line.split(' ')
+    def split_line(self, line):
+        return re.split(self.split_regex, line)
 
     def parse_line(self, line):
         if line.startswith(self.comment_indicator) or line in ('', '\n'):
@@ -66,7 +65,8 @@ class CMUPhonemeMapper:
                 phoneme_lines.append(self.phoneme_map_line(line))
         return phoneme_lines
 
-    def concat_phonemes(self, line):
+    @staticmethod
+    def concat_phonemes(line):
         concat_line = []
         for word in line:
             concat_line.append('_'.join(word))
