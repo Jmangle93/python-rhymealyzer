@@ -1,3 +1,7 @@
+# JMA - Project Specific
+ignore/*
+test_run.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
