@@ -1,6 +1,7 @@
 // This is an excerpt from 'The Love Song of J Alfred Prufrock,' by T S Eliot.
 // It is a default example for mapping and analysis of the Rhymealyzer.
 
+[Stanza 1]
 Let us go then, you and I,
 When the evening is spread out against the sky
 Like a patient etherized upon a table;
