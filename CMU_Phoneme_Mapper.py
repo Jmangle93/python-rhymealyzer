@@ -1,6 +1,4 @@
 from g2p_en import G2p
-from nltk.corpus import cmudict
-from nltk.corpus import stopwords as nltk_stopwords
 import re
 
 
@@ -16,7 +14,6 @@ class CMUPhonemeMapper:
         self.txt_file = self.open_txt_file(txt_filename)
         self.delimited_lines = self.txt_to_delimited(self.txt_file)
         self.phoneme_lines = self.delimited_to_phonemes(self.delimited_lines)
-        self.print_phoneme_map()
 
     @staticmethod
     def open_txt_file(txt_filename):
@@ -36,10 +33,16 @@ class CMUPhonemeMapper:
     def parse_line(self, line):
         if line.startswith(self.comment_indicator) or line in ('', '\n'):
             return False
-        elif self.section_header_regex.match(line):
+        elif self.is_line_a_header(line):
             return line
         else:
             return self.split_line(line)
+
+    def is_line_a_header(self, line):
+        if type(line) is str and self.section_header_regex.match(line):
+            return True
+        else:
+            return False
 
     def phoneme_map_line(self, line):
         mapped_line = []
@@ -59,7 +62,7 @@ class CMUPhonemeMapper:
     def delimited_to_phonemes(self, delimited_lines):
         phoneme_lines = []
         for line in delimited_lines:
-            if type(line) is str and self.section_header_regex.match(line):
+            if self.is_line_a_header(line):
                 phoneme_lines.append(self.header_tag)
             else:
                 phoneme_lines.append(self.phoneme_map_line(line))
