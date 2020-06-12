@@ -13,7 +13,8 @@ class CMUPhonemeMapper:
 
         self.txt_file = self.open_txt_file(txt_filename)
         self.delimited_lines = self.txt_to_delimited(self.txt_file)
-        self.phoneme_lines = self.delimited_to_phonemes(self.delimited_lines)
+        self.word_separated_phoneme_lines = self.delimited_to_phonemes(self.delimited_lines)
+        self.phoneme_lines = self.consolidate_phoneme_lines(self.word_separated_phoneme_lines)
 
     @staticmethod
     def open_txt_file(txt_filename):
@@ -60,12 +61,19 @@ class CMUPhonemeMapper:
         return delimited_lines
 
     def delimited_to_phonemes(self, delimited_lines):
-        phoneme_lines = []
+        word_separated_phoneme_lines = []
         for line in delimited_lines:
             if self.is_line_a_header(line):
-                phoneme_lines.append(self.header_tag)
+                word_separated_phoneme_lines.append(self.header_tag)
             else:
-                phoneme_lines.append(self.phoneme_map_line(line))
+                word_separated_phoneme_lines.append(self.phoneme_map_line(line))
+        return word_separated_phoneme_lines
+
+    @staticmethod
+    def consolidate_phoneme_lines(word_separated_phoneme_lines):
+        phoneme_lines = []
+        for line in word_separated_phoneme_lines:
+            phoneme_lines.append([phoneme for word in line for phoneme in word])
         return phoneme_lines
 
     @staticmethod
@@ -76,7 +84,7 @@ class CMUPhonemeMapper:
         return concat_line
 
     def print_phoneme_map(self):
-        for i, line in enumerate(self.phoneme_lines):
+        for i, line in enumerate(self.word_separated_phoneme_lines):
             if line == self.header_tag:
                 print(self.delimited_lines[i])
             else:
