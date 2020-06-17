@@ -1,3 +1,5 @@
-from CMU_Phoneme_Mapper import CMUPhonemeMapper
+# from CMU_Phoneme_Mapper import CMUPhonemeMapper
+from Phoneme_Rhyme_Analyzer import PhonemeRhymeAnalyzer
 
-mapper = CMUPhonemeMapper()
+#mapper = CMUPhonemeMapper()
+analyzer = PhonemeRhymeAnalyzer()

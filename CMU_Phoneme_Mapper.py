@@ -42,6 +42,8 @@ class CMUPhonemeMapper:
     def is_line_a_header(self, line):
         if type(line) is str and self.section_header_regex.match(line):
             return True
+        elif line == self.header_tag:
+            return True
         else:
             return False
 
