@@ -10,8 +10,7 @@ class PhonemeRhymeAnalyzer:
         self.rhyme_line_mappings = []
         self.rhyme_dict = {}
         self.VOWELS = ['A', 'E', 'I', 'O', 'U', 'Y']
-        self.RHYME_LENGTH = 4
-        self.rhyme_counter = 64
+        self.ascii_label_counter = 64
         self.cycle_all_sections()
         print(self.rhyme_dict)
 
@@ -21,21 +20,25 @@ class PhonemeRhymeAnalyzer:
                 return existing_phoneme
         return False
 
-    def get_line_ending(self, line):
-        if len(line) >= self.RHYME_LENGTH:
-            return ' '.join(line[-self.RHYME_LENGTH:])
-        else:
-            return ' '.join(line[-len(line):])
+    def get_sound_by_last_vowel(self, line):
+        accumulated_sound = ''
+        for i in range(len(line)):
+            this_phoneme = line[-(1 + i)]
+            first_char_in_phoneme = this_phoneme[0]
+            if first_char_in_phoneme not in self.VOWELS:
+                accumulated_sound = ''.join([this_phoneme, accumulated_sound])
+            else:
+                return ''.join([this_phoneme, accumulated_sound])
 
     def map_line_ending(self, line):
-        line_ending_phoneme = self.get_line_ending(line)
-        recorded_phoneme = self.is_phoneme_subset_of_recorded(line_ending_phoneme)
+        line_ending_phonemes = self.get_sound_by_last_vowel(line)
+        recorded_phoneme = self.is_phoneme_subset_of_recorded(line_ending_phonemes)
         if recorded_phoneme:
             self.rhyme_line_mappings.append(self.rhyme_dict[recorded_phoneme])
-        elif line_ending_phoneme not in self.rhyme_dict.keys():
-            self.rhyme_counter = self.rhyme_counter + 1
-            self.rhyme_dict[line_ending_phoneme] = [chr(self.rhyme_counter)]
-            self.rhyme_line_mappings.append(self.rhyme_dict[line_ending_phoneme])
+        elif line_ending_phonemes not in self.rhyme_dict.keys():
+            self.ascii_label_counter = self.ascii_label_counter + 1
+            self.rhyme_dict[line_ending_phonemes] = [chr(self.ascii_label_counter)]
+            self.rhyme_line_mappings.append(self.rhyme_dict[line_ending_phonemes])
 
     def cycle_all_sections(self):
         for line in self.mapper.phoneme_lines:
