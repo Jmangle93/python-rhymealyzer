@@ -1,4 +1,5 @@
 from g2p_en import G2p
+import nltk
 import re
 
 
@@ -10,6 +11,7 @@ class CMUPhonemeMapper:
         self.section_header_regex = re.compile(section_header_regex)
         self.header_tag = '<HEADER>'
         self.split_regex = ' |-'
+        self.tokenizer = nltk.RegexpTokenizer(r"\w+")
 
         self.txt_file = self.open_txt_file(txt_filename)
         self.delimited_lines = self.txt_to_delimited(self.txt_file)
@@ -37,7 +39,7 @@ class CMUPhonemeMapper:
         elif self.is_line_a_header(line):
             return line
         else:
-            return self.split_line(line)
+            return self.tokenizer.tokenize(line)
 
     def is_line_a_header(self, line):
         if type(line) is str and self.section_header_regex.match(line):
