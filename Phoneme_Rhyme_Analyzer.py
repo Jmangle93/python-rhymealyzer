@@ -12,11 +12,13 @@ class PhonemeRhymeAnalyzer:
         self.vowels = ['A', 'E', 'I', 'O', 'U', 'Y']
         self.ascii_counter = 64
         self.cycle_all_sections()
-        print(self.rhyme_dict)
+        self.print_mapped_lines()
 
     def is_phoneme_in_recorded(self, phoneme):
         for existing_phoneme in self.rhyme_dict.keys():
             if phoneme in existing_phoneme and phoneme != existing_phoneme:
+                return existing_phoneme
+            elif phoneme in existing_phoneme:
                 return existing_phoneme
         return False
 
@@ -36,11 +38,12 @@ class PhonemeRhymeAnalyzer:
         line_ending_sound = self.get_sound_by_last_vowel(line)
         recorded_phoneme = self.is_phoneme_in_recorded(line_ending_sound)
         if recorded_phoneme:
-            self.rhyme_line_mappings.append(self.rhyme_dict[recorded_phoneme])
+            self.rhyme_dict[recorded_phoneme] = [chr(self.ascii_counter)]
+            return self.rhyme_dict[recorded_phoneme]
         elif line_ending_sound not in self.rhyme_dict.keys():
             self.ascii_counter = self.ascii_counter + 1
             self.rhyme_dict[line_ending_sound] = [chr(self.ascii_counter)]
-            self.rhyme_line_mappings.append(self.rhyme_dict[line_ending_sound])
+            return self.rhyme_dict[line_ending_sound]
 
     def cycle_all_sections(self):
         for line in self.mapper.phoneme_lines:
@@ -48,3 +51,9 @@ class PhonemeRhymeAnalyzer:
                 self.rhyme_line_mappings.append(self.mapper.header_tag)
             else:
                 self.rhyme_line_mappings.append(self.map_line_ending(line))
+
+    def print_mapped_lines(self):
+        for i, line in enumerate(self.mapper.delimited_lines):
+            if self.rhyme_line_mappings[i]:
+                this_mapping = self.rhyme_line_mappings[i]
+                print('{0} ~~~\t\t{1}'.format(line, this_mapping))
