@@ -1,8 +1,9 @@
 # python-rhymealyzer
 Using g2p-en, provides rhyme analysis and structures of an English text.
 
-# To do: Remove punct before rhyme matching; add phonemes since last vowel sound function, remove RHYME_LENGTH
+# Currently mapping line-endings correctly according to CMU.
+# However, g2p_en will now be deprecated in favor of RhymeZone
 
-Dependencies:
+Dependencies: g2p_en, nltk
 
 Example:

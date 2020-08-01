@@ -1,6 +1,4 @@
 from CMU_Phoneme_Mapper import CMUPhonemeMapper
-# from nltk.corpus import cmudict
-# from nltk.corpus import stopwords as nltk_stopwords
 
 
 class PhonemeRhymeAnalyzer:
@@ -12,7 +10,8 @@ class PhonemeRhymeAnalyzer:
         self.vowels = ['A', 'E', 'I', 'O', 'U', 'Y']
         self.ascii_counter = 64
         self.cycle_all_sections()
-        self.print_mapped_lines()
+        # self.print_mapped_lines()
+        # self.mapper.print_phoneme_map()
 
     def is_phoneme_in_recorded(self, phoneme):
         for existing_phoneme in self.rhyme_dict.keys():
@@ -39,6 +38,7 @@ class PhonemeRhymeAnalyzer:
         recorded_phoneme = self.is_phoneme_in_recorded(line_ending_sound)
         if recorded_phoneme:
             self.rhyme_dict[recorded_phoneme] = [chr(self.ascii_counter)]
+            print('Phoneme Duplicate Recorded: {0}'.format(recorded_phoneme))
             return self.rhyme_dict[recorded_phoneme]
         elif line_ending_sound not in self.rhyme_dict.keys():
             self.ascii_counter = self.ascii_counter + 1
@@ -56,4 +56,4 @@ class PhonemeRhymeAnalyzer:
         for i, line in enumerate(self.mapper.delimited_lines):
             if self.rhyme_line_mappings[i]:
                 this_mapping = self.rhyme_line_mappings[i]
-                print('{0} ~~~\t\t{1}'.format(line, this_mapping))
+                print('{0}\t\t~~~\t\t{1}'.format(line, this_mapping))
